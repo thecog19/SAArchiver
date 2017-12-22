@@ -116,7 +116,7 @@ GEM
     net-http-digest_auth (1.4)
     net-http-persistent (2.9.4)
     nio4r (1.2.1)
-    nokogiri (1.6.8.1)
+    nokogiri (1.8.1)
       mini_portile2 (~> 2.1.0)
     ntlm-http (0.1.1)
     pg (0.19.0)
