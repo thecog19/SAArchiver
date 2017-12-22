@@ -29,7 +29,6 @@ class SAScraper
 
   def update_thread_with_posts
     thread = Sathread.where(thread_id: @thread_id).first
-
     thread.last_post_id = @last_post
     unless thread.first_post_id
       thread.first_post_id = @first_post
@@ -109,9 +108,8 @@ class SAScraper
                           thread_id: @thread_id, 
                           post_id: (post.attributes["id"].to_s)[4..-1] )
       new_post.save
-    else
-      Post.where(post_id: (post.attributes["id"].to_s)[4..-1]).first
     end
+    Post.where(post_id: (post.attributes["id"].to_s)[4..-1]).first
   end
 
   def get_post_id(post)
