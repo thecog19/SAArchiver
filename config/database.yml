@@ -3,7 +3,7 @@ development:
   database: saarchiver/development   # name this whatever you want
   host: localhost
   pool: 5          
-  username: felipe
+  username: postgres
   password: password                  
   timeout: 5000                
 

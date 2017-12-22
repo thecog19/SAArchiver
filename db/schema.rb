@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161203185518) do
+ActiveRecord::Schema.define(version: 20171222170030) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,9 +26,11 @@ ActiveRecord::Schema.define(version: 20161203185518) do
 
   create_table "sathreads", force: :cascade do |t|
     t.integer  "op_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
     t.integer  "thread_id"
+    t.integer  "last_post_id"
+    t.integer  "first_post_id"
   end
 
   create_table "users", force: :cascade do |t|

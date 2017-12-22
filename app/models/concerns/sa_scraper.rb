@@ -4,6 +4,8 @@ class SAScraper
   def initialize
     @agent = Mechanize.new
     @thread_id = nil
+    @fist_post = nil
+    @last_post = nil
   end
 
   def main_logic(thread, file_name = "myfile.txt" )
@@ -20,8 +22,19 @@ class SAScraper
       page = page.link_with(:text => '›').click
       page_on += 1 
     end
+    update_thread_with_posts
     time_now = Time.new
     puts "total run time #{time_now - time}"
+  end
+
+  def update_thread_with_posts
+    thread = Sathread.where(thread_id: @thread_id).first
+
+    thread.last_post_id = @last_post
+    unless thread.first_post_id
+      thread.first_post_id = @first_post
+    end
+    thread.save
   end
 
   def login(thread_given)
@@ -48,9 +61,14 @@ class SAScraper
 
   def get_posts(page, file_name = "myfile.txt")
     posts = sanitize(page)
-    posts.each do |post|     
+    posts.each do |post|
       user = create_user(post)
-      create_post(post, user)
+      post_record = create_post(post, user)
+      unless @first_post
+        @first_post = post_record.id
+      end
+      @last_post = post_record.id
+
     end
   end
 
@@ -67,7 +85,9 @@ class SAScraper
       user = User.new(name: get_data(post, "dt.author").text.to_s, 
              reg_date: get_data(post, "dd.registered").text.to_s,
              quote: get_data(post, "dd.title").text.to_s,
-             image: post.css("div.bbc-center").css("img.img").to_s)
+             image: post.css("div.bbc-center").css("img.img").to_s,
+             user_id: post.css("td.userinfo").first["class"].split(" ")[1][7..-1]
+             )
       user.save
       
       unless Sathread.where(thread_id: @thread_id).first.nil?
@@ -83,23 +103,22 @@ class SAScraper
   end
 
   def create_post(post, user)
-    new_post = Post.new(body: get_data(post, "td.postbody").to_s,                  user_id: user.id, 
-                        thread_id: @thread_id, 
-                        post_id: (post.attributes["id"].to_s)[4..-1] )
-    new_post.save 
+    if Post.where(post_id: (post.attributes["id"].to_s)[4..-1]).empty?
+      new_post = Post.new(body: get_data(post, "td.postbody").to_s,
+                          user_id: user.id, 
+                          thread_id: @thread_id, 
+                          post_id: (post.attributes["id"].to_s)[4..-1] )
+      new_post.save
+    else
+      Post.where(post_id: (post.attributes["id"].to_s)[4..-1]).first
+    end
+  end
+
+  def get_post_id(post)
+    (post.attributes["id"].to_s)[4..-1]
   end
 
   def get_data(post, target)
     post.css(target)
-  end
-
-  def store(file_name, content)
-    open(file_name, 'a+') do |f|
-      f.puts content
-    end
-  end
-
-  def save_posts(post)
-    post.save! 'test.txt'
   end
 end
