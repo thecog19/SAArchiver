@@ -8,31 +8,35 @@ class SAScraper
     @last_post = nil
   end
 
-  def main_logic(thread, file_name = "myfile.txt" )
+  def main_logic(thread)
     page = login(thread)
     time = Time.now
     @thread_id = get_thread_id(page).to_i
-    create_thread(@thread_id)
-    page_on = 1
+    thread = create_thread(@thread_id)
+    if(thread.last_page)
+      page = @agent.get(thread.last_page)
+    end
     loop do
       sleep(0.5)
-      posts = get_posts(page, file_name)
+      posts = get_posts(page)
+      page_on = page.uri.to_s.split("&").last[11..-1]
       p "Page #{page_on}"
       break unless page.link_with(:text => '›')
       page = page.link_with(:text => '›').click
-      page_on += 1 
     end
-    update_thread_with_posts
+    update_thread_with_posts(page.uri.to_s)
     time_now = Time.new
     puts "total run time #{time_now - time}"
   end
 
-  def update_thread_with_posts
+  def update_thread_with_posts(finalURL)
     thread = Sathread.where(thread_id: @thread_id).first
     thread.last_post_id = @last_post
     unless thread.first_post_id
+      thread.op_id = Post.where(id: @first_post).first.user_id
       thread.first_post_id = @first_post
     end
+    thread.last_page = finalURL
     thread.save
   end
 
@@ -58,7 +62,7 @@ class SAScraper
     
   end
 
-  def get_posts(page, file_name = "myfile.txt")
+  def get_posts(page)
     posts = sanitize(page)
     posts.each do |post|
       user = create_user(post)
@@ -75,7 +79,10 @@ class SAScraper
     if Sathread.where(thread_id: thread_id).empty?
       thread = Sathread.new(thread_id: thread_id)
       thread.save
+    else 
+      thread = Sathread.where(thread_id: thread_id)
     end
+    thread.first
   end
 
   def create_user(post)
