@@ -1,24 +1,16 @@
-# README
+This provides a simple REST API for storing and quering SA forums threads, mostly aimed at storing CYOAs. 
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+The API allows for users to query the existing data (by user, post and most importantly thread), as well as adding new threads to be archived. 
 
-Things you may want to cover:
+As of right now your request to archive a thread will have to be manually approved by an admin. Send the request to the provided request API. 
 
-* Ruby version
+Documentation on API functions here
 
-* System dependencies
+Search documentation here.
 
-* Configuration
+How to set this up on your own here (full rails setup. postgress setup. figaro use.)
 
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Route /sathread/ = index
+Route /sathread/:thread_id = thread
+Route /sathread/title/:title = thread
+Route 
