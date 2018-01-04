@@ -21,10 +21,11 @@ class SAScraper
       posts = get_posts(page)
       page_on = page.uri.to_s.split("&").last[11..-1]
       p "Page #{page_on}"
+      update_thread_with_posts(page.uri.to_s)
       break unless page.link_with(:text => '›')
       page = page.link_with(:text => '›').click
     end
-    update_thread_with_posts(page.uri.to_s)
+    
     time_now = Time.new
     puts "total run time #{time_now - time}"
   end
