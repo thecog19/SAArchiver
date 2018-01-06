@@ -31,6 +31,7 @@ class SAScraper
   end
 
   def update_thread_with_posts(finalURL)
+    if 
     thread = Sathread.where(thread_id: @thread_id).first
     thread.last_post_id = @last_post
     unless thread.first_post_id
@@ -83,7 +84,7 @@ class SAScraper
     else 
       thread = Sathread.where(thread_id: thread_id)
     end
-    thread.first
+    thread
   end
 
   def create_user(post)
