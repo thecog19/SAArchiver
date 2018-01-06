@@ -83,7 +83,7 @@ class SAScraper
     else 
       thread = Sathread.where(thread_id: thread_id).first
     end
-    thread.first
+    thread
   end
 
   def create_user(post)
