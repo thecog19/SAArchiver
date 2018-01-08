@@ -1,9 +1,8 @@
 require_relative 'concerns/sa_scraper'
 require 'logger'
 class Sathread < ApplicationRecord
-  belongs_to :user, :foreign_key => :op_id,  optional: true 
+  belongs_to :op, :class_name => "User", :foreign_key => :op_id,  optional: true 
   has_many :posts, :primary_key => :thread_id, :foreign_key => :thread_id
-
   def self.refreshAllThreads
     logger = Logger.new('log/logfile.log')
     logger.info('refreshAllThreads') { "Begining to refresh all threads at time #{Time.now}" }
