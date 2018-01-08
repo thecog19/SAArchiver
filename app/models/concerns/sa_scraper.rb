@@ -1,7 +1,8 @@
 #HAVE TO GET ASSOCIATIONS WORKING
-
+require 'logger'
 class SAScraper 
   def initialize
+    @logger = Logger.new('log/logfile.log')
     @agent = Mechanize.new
     @thread_id = nil
     @fist_post = nil
@@ -9,9 +10,11 @@ class SAScraper
   end
 
   def main_logic(thread)
+    @logger.info('main_logic') { "Initializing main logic for #{thread}" }
     page = login(thread)
     time = Time.now
     @thread_id = get_thread_id(page).to_i
+    @logger.info('main_logic') { "Initializing main logic for #{@thread_id}" }
     thread = create_thread(@thread_id)
     if(thread.last_page)
       page = @agent.get(thread.last_page)
@@ -25,12 +28,12 @@ class SAScraper
       break unless page.link_with(:text => '›')
       page = page.link_with(:text => '›').click
     end
-    
+    @logger.info('main_logic') { "Process ran for #{thread}" }
     time_now = Time.new
     puts "total run time #{time_now - time}"
   end
 
-  def update_thread_with_posts(finalURL)
+  def update_thread_with_posts(finalURL) 
     thread = Sathread.where(thread_id: @thread_id).first
     thread.last_post_id = @last_post
     unless thread.first_post_id
@@ -47,6 +50,7 @@ class SAScraper
     my_page = login_page.form_with(:action => 'https://forums.somethingawful.com/account.php')
     my_page.fields[1].value = ENV["sausername"]
     my_page.fields[2].value = ENV["sapassword"]
+    @logger.debug('login') { "Logged in to thread" }
     my_page.click_button
   end
 
@@ -80,6 +84,7 @@ class SAScraper
     if Sathread.where(thread_id: thread_id).empty?
       thread = Sathread.new(thread_id: thread_id)
       thread.save
+      @logger.debug('create_thread') { "Created thread #{thread.id}" }
     else 
       thread = Sathread.where(thread_id: thread_id).first
     end
@@ -96,7 +101,7 @@ class SAScraper
              user_id: post.css("td.userinfo").first["class"].split(" ")[1][7..-1]
              )
       user.save
-      
+      @logger.debug('create_user') { "Created user #{user.id}" }
       unless Sathread.where(thread_id: @thread_id).first.nil?
         if Sathread.where(thread_id: @thread_id).first.posts.empty?
           Sathread.where(thread_id: @thread_id).first.update(op_id: user.id) 
@@ -115,6 +120,8 @@ class SAScraper
                           user_id: user.id, 
                           thread_id: @thread_id, 
                           post_id: (post.attributes["id"].to_s)[4..-1] )
+      @logger.debug('create_post') { "Created post #{new_post.id}" }
+
       new_post.save
     end
     Post.where(post_id: (post.attributes["id"].to_s)[4..-1]).first
