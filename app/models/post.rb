@@ -6,4 +6,5 @@ class Post < ApplicationRecord
 
   pg_search_scope :exact_search_for, against: %i(body)
   pg_search_scope :fuzzy_search_for, against: %i(body), :using => { :tsearch => {:prefix => true, :dictionary => "english"}}
+
 end

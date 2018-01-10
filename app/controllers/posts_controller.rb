@@ -2,6 +2,16 @@ class PostsController < ApplicationController
 
 	def index
 		@posts = Post.all
-		render :json => @posts
+		paginate :json => @posts
+	end
+
+	def posts_by_thread
+		if(Sathread.where(thread_id: params[:thread_id]).first)
+			@posts = Sathread.where(thread_id: params[:thread_id]).first.posts
+			paginate :json => @posts
+		else
+			render :json => {error: "thread not found"} 
+		end
+		
 	end
 end
