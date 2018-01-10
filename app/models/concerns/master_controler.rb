@@ -13,5 +13,6 @@ begin
 	p "starting"
 	a.main_logic(target)
 rescue Exception => e
+	p e
 	logger.error('master_controller') { "An error caused the specified thread #{target} to fail to update, error was #{e.inspect} #{e.to_s}" }
 end
