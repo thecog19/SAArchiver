@@ -1,11 +1,13 @@
 require_relative 'concerns/sa_scraper'
 require 'logger'
 class Sathread < ApplicationRecord
+  include PgSearch 
+  logger = Logger.new('log/logfile.log')
   belongs_to :op, :class_name => "User", :foreign_key => :op_id,  optional: true 
   has_many :posts, :primary_key => :thread_id, :foreign_key => :thread_id
+
   def self.refreshAllThreads
-    logger = Logger.new('log/logfile.log')
-    logger.info('refreshAllThreads') { "Begining to refresh all threads at time #{Time.now}" }
+    logger.info('refreshAllThreads') { "Begining to refresh all threads" }
   	self.all.each do |thread|
   		newScraper = SAScraper.new
       begin 
@@ -16,8 +18,18 @@ class Sathread < ApplicationRecord
     end
   end 
 
-  def self.newThread(url)
-  	newScraper = SAScraper.new
-  	newScraper.main_logic(url)
+  def self.newThread(url, title)
+    logger.info('newThread') { "Adding new thread, with title #{title} and url #{url}" }
+    begin
+    	newScraper = SAScraper.new
+    	thread = newScraper.main_logic(url)
+      thread.update(title: title)
+    rescue Exception => e
+      p e
+      logger.error('newThread') { "An error caused thread with #{url} to fail to update, error was #{e.message} " }
+    end
   end
+
+  pg_search_scope :exact_search_for, against: %i(title)
+  pg_search_scope :fuzzy_search_for, against: %i(title), :using => { :tsearch => {:prefix => true, :dictionary => "english"}}
 end

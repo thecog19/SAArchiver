@@ -13,6 +13,10 @@ gem "pg_search"
 gem 'kaminari'
 gem 'api-pagination'
 
+group :development, :test do
+  gem 'rspec-rails', '~> 3.7'
+end
+
 # Use Puma as the app server
 gem 'puma', '~> 3.0'
 gem 'thor', '0.19.1'

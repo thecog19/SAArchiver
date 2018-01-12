@@ -10,7 +10,17 @@ class SathreadController < ApplicationController
 		paginate :json => @sathread
 	end
 
-	def strict_search
+	def strict_search_for_thread
+		@sathread = Sathread.exact_search_for(params[:search_term])
+		paginate :json => @sathread
+	end
+
+	def fuzzy_search_for_thread
+		@sathread = Sathread.fuzzy_search_for(params[:search_term])
+		paginate :json => @sathread
+	end
+
+	def posts_in_thread_strict_search
 		@results = Post.exact_search_for(params[:search_term]).where(thread_id: params[:thread_id])
 		if(@results.empty?)
 			render :json => []
@@ -51,7 +61,7 @@ class SathreadController < ApplicationController
 		end
 	end
 
-	def fuzzy_search
+	def posts_in_thread_fuzzy_search
 		@results = Post.fuzzy_search_for(params[:search_term]).where(thread_id: params[:thread_id])
 		if(@results.empty?)
 			render :json => []

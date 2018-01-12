@@ -31,6 +31,7 @@ class SAScraper
     @logger.info('main_logic') { "Process ran for #{@thread_id}" }
     time_now = Time.new
     puts "total run time #{time_now - time}"
+    thread
   end
 
   def update_thread_with_posts(finalURL) 
@@ -40,6 +41,7 @@ class SAScraper
       thread.op_id = Post.where(id: @first_post).first.user_id
       thread.first_post_id = @first_post
     end
+    # @logger.debug('update_thread_with_posts') { "#{finalURL}" }
     thread.last_page = finalURL
     thread.save
   end
