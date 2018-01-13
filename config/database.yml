@@ -9,10 +9,10 @@ development:
 
 production:
   adapter: postgresql
-  database: saarchiver/development   # name this whatever you want
+  database: saarchiver/production   # name this whatever you want
   host: localhost
   pool: 5          
-  username: felipe
+  username: postgres
   password: password                  
   timeout: 5000    
 
@@ -21,6 +21,6 @@ test:
   database: saarchiver/test   # name this whatever you want
   host: localhost
   pool: 5          
-  username: felipe
+  username: postgres
   password: password                  
   timeout: 5000                            

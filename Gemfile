@@ -15,6 +15,7 @@ gem 'api-pagination'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.7'
+  gem "factory_bot_rails", "~> 4.0", :require => false
 end
 
 # Use Puma as the app server
