@@ -8,6 +8,8 @@ gem 'bootstrap'
 gem 'pg'
 gem 'mechanize'
 gem 'figaro'
+gem 'rack-cors', :require => 'rack/cors'
+
 
 gem "pg_search"
 gem 'kaminari'
