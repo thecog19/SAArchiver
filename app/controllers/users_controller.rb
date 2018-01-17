@@ -12,6 +12,10 @@ class UsersController < ApplicationController
 		render :json => User.where(user_id: params[:id])
 	end
 
+	def show_internal_id
+		render :json => User.where(id: params[:id])
+	end
+
 	def index
 		paginate :json => User.all
 	end
