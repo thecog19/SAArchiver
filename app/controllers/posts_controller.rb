@@ -19,6 +19,16 @@ class PostsController < ApplicationController
 		
 	end
 
+	def by_thread_with_user
+		if(Sathread.where(thread_id: params[:thread_id]).first)
+			@posts = Sathread.includes([:user]).where(thread_id: params[:thread_id]).first.posts
+			paginate :json => @posts
+		else
+			render :json => {error: "thread not found"} 
+		end
+		
+	end
+
 	def complex_query
 		posts = Post
 		paginate :json => Post.all and return unless(params[:query])

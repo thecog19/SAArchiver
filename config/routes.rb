@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   get '/thread/fuzzysearch/:search_term', to: 'sathread#strict_search_for_thread'
   get '/thread/strictsearch/:search_term', to: 'sathread#fuzzy_search_for_thread'
   post '/posts/search/complex', to: 'posts#complex_query'
+  get  '/posts/bythread/:thread_id/with_user', to: 'posts#by_thread_with_user'
 
   root to: 'sathread#index'
 end
