@@ -71,9 +71,10 @@ class SAScraper
 
   def get_posts(page)
     posts = sanitize(page)
+    url = page.uri
     posts.each do |post|
       user = create_user(post)
-      post_record = create_post(post, user)
+      post_record = create_post(post, user, url)
       unless @first_post
         @first_post = post_record.id
       end
@@ -95,11 +96,10 @@ class SAScraper
 
   def create_user(post)
     if User.where(name: get_data(post, "dt.author").text.to_s).empty?
-
       user = User.new(name: get_data(post, "dt.author").text.to_s, 
              reg_date: get_data(post, "dd.registered").text.to_s,
              quote: get_data(post, "dd.title").text.to_s,
-             image: post.css("div.bbc-center").css("img.img").to_s,
+             image: get_data(post, "dd.title").css("img").to_s,
              user_id: post.css("td.userinfo").first["class"].split(" ")[1][7..-1]
              )
       user.save
@@ -116,12 +116,13 @@ class SAScraper
     end
   end
 
-  def create_post(post, user)
+  def create_post(post, user, url)
     if Post.where(post_id: (post.attributes["id"].to_s)[4..-1]).empty?
       new_post = Post.new(body: get_data(post, "td.postbody").to_s,
                           user_id: user.id, 
                           thread_id: @thread_id, 
-                          post_id: (post.attributes["id"].to_s)[4..-1] )
+                          post_id: (post.attributes["id"].to_s)[4..-1],
+                          url:  url)
       # @logger.debug('create_post') { "Created post #{new_post.id}" }
 
       new_post.save
