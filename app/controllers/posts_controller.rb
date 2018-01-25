@@ -1,8 +1,9 @@
 class PostsController < ApplicationController
 
 	def index
-		@posts = Post.all
-		paginate :json => @posts
+		page = params[:page] || 1
+		@posts = Post.all.page(page)
+		render :json => {posts: @posts, meta: {page: page, total: @posts.total_pages }} 
 	end
 
 	def show
@@ -11,8 +12,9 @@ class PostsController < ApplicationController
 
 	def posts_by_thread
 		if(Sathread.where(thread_id: params[:thread_id]).first)
-			@posts = Sathread.where(thread_id: params[:thread_id]).first.posts
-			paginate :json => @posts
+			page = params[:page] || 1
+			@posts = Sathread.where(thread_id: params[:thread_id]).first.posts.page(page)
+			render :json => {posts: @posts, meta: {page: page, total: @posts.total_pages }} 
 		else
 			render :json => {error: "thread not found"} 
 		end
@@ -44,7 +46,9 @@ class PostsController < ApplicationController
 			posts = posts.where(thread_id: params[:thread_id])
 		end
 
-		paginate :json => posts
+		page = params[:page] || 1
+		posts = posts.page(page)
+		render :json => {posts: posts, meta: {page: page, total: posts.total_pages }} 
 	end
 
 	
