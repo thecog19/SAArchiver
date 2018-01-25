@@ -1,11 +1,17 @@
 class UsersController < ApplicationController
 
 	def fuzzy_search
-		paginate :json => User.prefix_search_for(params[:search_term])
+		page = params[:page] || 1
+		@user = User.prefix_search_for(params[:search_term]).page(page)
+
+		render :json => {posts: @user, meta: {page: page, total: @user.total_pages }} 
 	end
 
 	def strict_search
-		paginate :json => User.exact_search_for(params[:search_term])
+		page = params[:page] || 1
+		@user = User.exact_search_for(params[:search_term]).page(page)
+
+		paginate :json => {posts: @user, meta: {page: page, total: @user.total_pages }} 
 	end
 
 	def show
@@ -17,6 +23,9 @@ class UsersController < ApplicationController
 	end
 
 	def index
-		paginate :json => User.all
+		page = params[:page] || 1
+		@user = User.all.page(page)
+
+		paginate :json => {posts: @user, meta: {page: page, total: @user.total_pages }} 
 	end
 end
