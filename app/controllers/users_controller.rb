@@ -4,14 +4,14 @@ class UsersController < ApplicationController
 		page = params[:page] || 1
 		@user = User.prefix_search_for(params[:search_term]).page(page)
 
-		render :json => {posts: @user, meta: {page: page, total: @user.total_pages }} 
+		render :json => {users: @user, meta: {page: page, total: @user.total_pages }} 
 	end
 
 	def strict_search
 		page = params[:page] || 1
 		@user = User.exact_search_for(params[:search_term]).page(page)
 
-		paginate :json => {posts: @user, meta: {page: page, total: @user.total_pages }} 
+		paginate :json => {users: @user, meta: {page: page, total: @user.total_pages }} 
 	end
 
 	def show
@@ -26,6 +26,11 @@ class UsersController < ApplicationController
 		page = params[:page] || 1
 		@user = User.all.page(page)
 
-		paginate :json => {posts: @user, meta: {page: page, total: @user.total_pages }} 
+		paginate :json => {users: @user, meta: {page: page, total: @user.total_pages }} 
+	end
+
+	def all_users
+		p "ship ahoy"
+		render :json => User.all
 	end
 end

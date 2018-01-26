@@ -4,7 +4,7 @@ class SathreadController < ApplicationController
 		page = params[:page] || 1
 		@sathreads = Sathread.all.order("created_at ASC").page(page)
 
-		render :json => {posts: @sathreads, meta: {page: page, total: @sathreads.total_pages }} 
+		render :json => {threads: @sathreads, meta: {page: page, total: @sathreads.total_pages }} 
 	
 	end
 
@@ -17,13 +17,13 @@ class SathreadController < ApplicationController
 	def strict_search_for_thread
 		page = params[:page] || 1
 		@sathreads = Sathread.exact_search_for(params[:search_term]).order("created_at ASC").page(page)
-		render :json => {posts: @sathreads, meta: {page: page, total: @sathreads.total_pages }} 
+		render :json => {threads: @sathreads, meta: {page: page, total: @sathreads.total_pages }} 
 	end
 
 	def fuzzy_search_for_thread
 		page = params[:page] || 1
 		@sathreads = Sathread.fuzzy_search_for(params[:search_term]).order("created_at ASC").page(page)
-		render :json => {posts: @sathreads, meta: {page: page, total: @sathreads.total_pages }} 
+		render :json => {threads: @sathreads, meta: {page: page, total: @sathreads.total_pages }} 
 	end
 
 	def posts_in_thread_strict_search
