@@ -2,27 +2,27 @@ class SathreadController < ApplicationController
 
 	def index
 		page = params[:page] || 1
-		@sathreads = Sathread.all.page(page)
+		@sathreads = Sathread.all.order("created_at ASC").page(page)
 
 		render :json => {posts: @sathreads, meta: {page: page, total: @sathreads.total_pages }} 
 	
 	end
 
 	def show
-		@sathread = Sathread.where(thread_id: params[:id])
+		@sathread = Sathread.where(thread_id: params[:id]).first
 		render :json => @sathread
 		
 	end
 
 	def strict_search_for_thread
 		page = params[:page] || 1
-		@sathreads = Sathread.exact_search_for(params[:search_term]).page(page)
+		@sathreads = Sathread.exact_search_for(params[:search_term]).order("created_at ASC").page(page)
 		render :json => {posts: @sathreads, meta: {page: page, total: @sathreads.total_pages }} 
 	end
 
 	def fuzzy_search_for_thread
 		page = params[:page] || 1
-		@sathreads = Sathread.fuzzy_search_for(params[:search_term]).page(page)
+		@sathreads = Sathread.fuzzy_search_for(params[:search_term]).order("created_at ASC").page(page)
 		render :json => {posts: @sathreads, meta: {page: page, total: @sathreads.total_pages }} 
 	end
 
@@ -32,7 +32,7 @@ class SathreadController < ApplicationController
 			render :json => []
 		else
 			page = params[:page] || 1
-			@results.page(page)
+			@results.order("created_at ASC").page(page)
 			render :json => {posts: @results, meta: {page: page, total: @results.total_pages }} 
 			
 		end
@@ -41,7 +41,7 @@ class SathreadController < ApplicationController
 	def user_in_thread_posts
 		@user = User.where(user_id: params[:user_id]).first
 		if(@user)
-			@results = @user.posts.where(thread_id: params[:thread_id])
+			@results = @user.posts.where(thread_id: params[:thread_id]).order("created_at ASC")
 		else
 			@results = nil
 		end
@@ -65,10 +65,10 @@ class SathreadController < ApplicationController
 			
 		@posts = Post.where(thread_id: params[:thread_id]).where(user_id: @user.id)
 		if(params[:search_type] == "fuzzy")
-			@posts = @posts.fuzzy_search_for(params[:search_term]).page(page)
+			@posts = @posts.fuzzy_search_for(params[:search_term]).order("created_at ASC").page(page)
 			render :json => {posts: @posts, meta: {page: page, total: @posts.total_pages }} 
 		elsif(params[:search_type] == "strict")
-			@posts = @posts.exact_search_for(params[:search_term]).page(page)
+			@posts = @posts.exact_search_for(params[:search_term]).order("created_at ASC").page(page)
 			render :json => {posts: @posts, meta: {page: page, total: @posts.total_pages }} 
 		else
 			render :json => {error: "invalid search type"}
@@ -76,12 +76,13 @@ class SathreadController < ApplicationController
 	end
 
 	def posts_in_thread_fuzzy_search
-		@results = Post.fuzzy_search_for(params[:search_term]).where(thread_id: params[:thread_id])
+		@results = Post.fuzzy_search_for(params[:search_term]).where(thread_id: params[:thread_id]).order("created_at ASC")
 		if(@results.empty?)
 			render :json => []
 		else
 			page = params[:page] || 1
 			@results.page(page)
-			render :json => {posts: @results, meta: {page: page, total: @results.total_pages }} 		end
+			render :json => {posts: @results, meta: {page: page, total: @results.total_pages }}
+		end
 	end
 end

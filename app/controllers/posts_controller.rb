@@ -2,7 +2,7 @@ class PostsController < ApplicationController
 
 	def index
 		page = params[:page] || 1
-		@posts = Post.all.page(page)
+		@posts = Post.all.order("created_at ASC").page(page)
 		render :json => {posts: @posts, meta: {page: page, total: @posts.total_pages }} 
 	end
 
@@ -13,7 +13,7 @@ class PostsController < ApplicationController
 	def posts_by_thread
 		if(Sathread.where(thread_id: params[:thread_id]).first)
 			page = params[:page] || 1
-			@posts = Sathread.where(thread_id: params[:thread_id]).first.posts.page(page)
+			@posts = Sathread.where(thread_id: params[:thread_id]).first.posts.order("created_at ASC").page(page)
 			render :json => {posts: @posts, meta: {page: page, total: @posts.total_pages }} 
 		else
 			render :json => {error: "thread not found"} 
@@ -47,7 +47,7 @@ class PostsController < ApplicationController
 		end
 
 		page = params[:page] || 1
-		posts = posts.page(page)
+		posts = posts.order("created_at ASC").page(page)
 		render :json => {posts: posts, meta: {page: page, total: posts.total_pages }} 
 	end
 
