@@ -32,7 +32,7 @@ class SathreadController < ApplicationController
 			render :json => []
 		else
 			page = params[:page] || 1
-			@results.order("created_at ASC").page(page)
+			@results = @results.order("created_at ASC").page(page)
 			render :json => {posts: @results, meta: {page: page, total: @results.total_pages }} 
 			
 		end
@@ -50,7 +50,7 @@ class SathreadController < ApplicationController
 			render :json => []
 		else
 			page = params[:page] || 1
-			@results.page(page)
+			@results = @results.page(page)
 			render :json => {posts: @results, meta: {page: page, total: @results.total_pages }} 
 		end
 	end
@@ -75,13 +75,17 @@ class SathreadController < ApplicationController
 		end
 	end
 
+	def all_threads
+		render :json => Sathread.all
+	end
+
 	def posts_in_thread_fuzzy_search
 		@results = Post.fuzzy_search_for(params[:search_term]).where(thread_id: params[:thread_id]).order("created_at ASC")
 		if(@results.empty?)
 			render :json => []
 		else
 			page = params[:page] || 1
-			@results.page(page)
+			@results = @results.page(page)
 			render :json => {posts: @results, meta: {page: page, total: @results.total_pages }}
 		end
 	end

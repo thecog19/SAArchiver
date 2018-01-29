@@ -30,7 +30,6 @@ class UsersController < ApplicationController
 	end
 
 	def all_users
-		p "ship ahoy"
 		render :json => User.all
 	end
 end
