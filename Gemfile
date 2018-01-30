@@ -9,6 +9,7 @@ gem 'pg'
 gem 'mechanize'
 gem 'figaro'
 gem 'rack-cors', :require => 'rack/cors'
+gem 'backup'
 
 
 gem "pg_search"
