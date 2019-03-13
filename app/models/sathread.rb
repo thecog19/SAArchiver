@@ -4,7 +4,7 @@ class Sathread < ApplicationRecord
   include PgSearch 
   logger = Logger.new('log/logfile.log')
   belongs_to :op, :class_name => "User", :foreign_key => :op_id,  optional: true 
-  has_many :posts, :primary_key => :thread_id, :foreign_key => :thread_id
+  has_many :posts, :primary_key => :thread_id, :foreign_key => :thread_id, dependent: :destroy
 
   def self.refreshAllThreads
     logger.info('refreshAllThreads') { "Begining to refresh all threads" }
