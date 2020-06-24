@@ -10,7 +10,7 @@ gem 'mechanize'
 gem 'figaro'
 gem 'rack-cors', :require => 'rack/cors'
 gem 'backup'
-
+gem 'pdfkit'
 
 gem "pg_search"
 gem 'kaminari'

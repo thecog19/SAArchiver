@@ -1,4 +1,5 @@
 require_relative 'concerns/sa_scraper'
+require_relative 'concerns/pdf_generator'
 require 'logger'
 class Sathread < ApplicationRecord
   include PgSearch 
@@ -28,6 +29,17 @@ class Sathread < ApplicationRecord
       p e
       logger.error('newThread') { "An error caused thread with #{url} to fail to update, error was #{e.message} " }
     end
+  end
+
+  def self.pdfThread(id)
+    logger.info('pdf') { "Generating a pdf of thread with id #{id}" }
+    # begin 
+      PdfGenerator.new(id)
+    # rescue Exception => e
+      # p e
+      # logger.error('newThread') { "An error caused the thread #{id} to not generate a pdf, error was #{e.message} " }
+    # end
+    
   end
 
   pg_search_scope :exact_search_for, against: %i(title)
