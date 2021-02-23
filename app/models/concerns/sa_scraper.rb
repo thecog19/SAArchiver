@@ -32,6 +32,9 @@ class SAScraper
     @logger.info('main_logic') { "Process ran for #{@thread_id}" }
     time_now = Time.new
     puts "total run time #{time_now - time}"
+    @thread_id = nil
+    @fist_post = nil
+    @last_post = nil
     thread
   end
 
