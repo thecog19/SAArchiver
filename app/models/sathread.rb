@@ -9,8 +9,9 @@ class Sathread < ApplicationRecord
 
   def self.refreshAllThreads
     logger.info('refreshAllThreads') { "Begining to refresh all threads" }
+    newScraper = SAScraper.new
   	self.all.each do |thread|
-  		newScraper = SAScraper.new
+      sleep(60)
       begin 
   		  newScraper.main_logic(thread.last_page)
   	  rescue Exception => e
