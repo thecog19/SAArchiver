@@ -13,7 +13,7 @@ class Sathread < ApplicationRecord
   	self.all.each do |thread|
       sleep(60)
       begin 
-  		  newScraper.main_logic(thread.last_page)
+        newScraper.main_logic(thread.last_page)
   	  rescue Exception => e
         logger.error('refreshAllThreads') { "An error caused thread with id #{thread.id} to fail to update, error was #{e.message} " }
       end
