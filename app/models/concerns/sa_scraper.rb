@@ -7,6 +7,7 @@ class SAScraper
     @thread_id = nil
     @fist_post = nil
     @last_post = nil
+    @logged_in = false
   end
 
   def main_logic(thread)
@@ -48,12 +49,18 @@ class SAScraper
 
   def login(thread_given)
     my_page = @agent.get(thread_given)
-    login_page = @agent.click(my_page.link_with(:text => /LOG IN/))
-    my_page = login_page.form_with(:action => 'https://forums.somethingawful.com/account.php')
-    my_page.fields[1].value = ENV["sausername"]
-    my_page.fields[2].value = ENV["sapassword"]
-    # @logger.debug('login') { "Logged in to thread" }
-    my_page.click_button
+    unless(@logged_in)
+      login_page = @agent.click(my_page.link_with(:text => /LOG IN/))
+      my_page = login_page.form_with(:action => 'https://forums.somethingawful.com/account.php')
+      my_page.fields[1].value = ENV["sausername"]
+      my_page.fields[2].value = ENV["sapassword"]
+      p "Logging in"
+      @logged_in = true
+      return my_page.click_button
+    else
+      p "Not logging in"
+      return my_page
+    end
   end
 
   def get_thread_id(page)
