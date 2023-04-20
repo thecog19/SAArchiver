@@ -1,4 +1,3 @@
-#HAVE TO GET ASSOCIATIONS WORKING
 require 'logger'
 class SAScraper 
   def initialize
@@ -8,6 +7,7 @@ class SAScraper
     @fist_post = nil
     @last_post = nil
     @logged_in = false
+    @imgur_helper = ImgurHelper.new
   end
 
   def main_logic(thread)
@@ -57,11 +57,9 @@ class SAScraper
       my_page = login_page.form_with(:action => 'https://forums.somethingawful.com/account.php')
       my_page.fields[1].value = ENV["sausername"]
       my_page.fields[2].value = ENV["sapassword"]
-      p "Logging in"
       @logged_in = true
       return my_page.click_button
     else
-      p "Not logging in"
       return my_page
     end
   end
@@ -134,7 +132,7 @@ class SAScraper
                           post_id: (post.attributes["id"].to_s)[4..-1],
                           url:  url)
       # @logger.debug('create_post') { "Created post #{new_post.id}" }
-
+      @imgur_helper.save_images(get_data(post, "td.postbody").to_s)
       new_post.save
     end
     Post.where(post_id: (post.attributes["id"].to_s)[4..-1]).first
