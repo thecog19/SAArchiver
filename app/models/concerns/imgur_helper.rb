@@ -3,7 +3,7 @@ require 'open-uri'
 
 class ImgurHelper
     def initialize(image_file_path = "./imgur_images")
-        @imgur_regex = /\bhttps?:\/\/(?:i\.)?imgur\.com\/(?:[a-zA-Z0-9]{7}|[a-zA-Z0-9]{5}|[a-zA-Z0-9]{3,})\b/
+        @imgur_regex = /\bhttps?:\/\/(?:i\.)?imgur\.com\/(?:[a-zA-Z0-9]{7,}|[a-zA-Z0-9]{5,}|[a-zA-Z0-9]{3,})\b/
         @image_file_path = image_file_path
         @logger = Logger.new('log/logfile.log')
         create_directory_if_not_exists(@image_file_path)
@@ -27,7 +27,7 @@ class ImgurHelper
     end
 
     def save_image(url)
-        regex = %r{\bhttps?://(?:i\.)?imgur\.com/(?:(?:gallery/)?([a-zA-Z0-9]{5,7})|\b([a-zA-Z0-9]{7})(?:\.\w+)?)\b}
+        regex = %r{\bhttps?://(?:i\.)?imgur\.com/(?:(?:gallery/)?([a-zA-Z0-9]{5,7})|\b([a-zA-Z0-9]{5,10})(?:\.\w+)?)\b}
         imgur_id_and_extension = url.match(regex)
         imgur_id = imgur_id_and_extension[1] || imgur_id_and_extension[2]
         p "imgur_id: #{imgur_id}"
