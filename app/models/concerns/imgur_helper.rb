@@ -9,7 +9,13 @@ class ImgurHelper
     end
 
     def save_images(body)
-        imgur_urls = body.scan(imgur_regex).map { |match| match[0] }
+        imgur_urls = body.scan(@imgur_regex).map { |match| match[0] }
+        imgur_urls.each do |url|
+            save_image(url)
+        end
+    end
+
+    def save_image(url)
         imgur_id = url.match(/\/([a-zA-Z0-9]{5,})(\.[a-zA-Z0-9]{3,4})?/)[1]
         imgur_extension = url.match(/\/([a-zA-Z0-9]{5,})(\.[a-zA-Z0-9]{3,4})?/)[2] || ".jpg"
         filename = "#{imgur_id}#{imgur_extension}"
