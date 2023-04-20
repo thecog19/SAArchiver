@@ -39,9 +39,7 @@ class ImgurHelper
         File.open(path, "wb") do |file|
             @logger.debug('save_images') { "Saving image #{url} to #{path}" }
             url = url + '.jpg' if File.extname(url) == ''
-            open(url, allow_redirections: :all) do |img|
-                file.write(img.read)
-            end
+            file.write(open(url).read)
         end
     end
 end
