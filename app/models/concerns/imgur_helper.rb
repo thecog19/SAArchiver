@@ -6,10 +6,17 @@ class ImgurHelper
         @imgur_regex = /\bhttps?:\/\/(?:i\.)?imgur\.com\/(?:[a-zA-Z0-9]{7}|[a-zA-Z0-9]{5}|[a-zA-Z0-9]{3,})\b/
         @image_file_path = image_file_path
         @logger = Logger.new('log/logfile.log')
+        create_directory_if_not_exists(@image_file_path)
+    end
+
+    def create_directory_if_not_exists(path)
+        unless Dir.exist?(path)
+            Dir.mkdir(path)
+        end
     end
 
     def save_images(body)
-        imgur_urls = body.scan(@imgur_regex).map { |match| match[0] }
+        imgur_urls = body.scan(@imgur_regex).map { |match| match }
         imgur_urls.each do |url|
             save_image(url)
         end
