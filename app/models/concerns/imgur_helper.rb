@@ -2,7 +2,7 @@ require 'logger'
 require 'open-uri'
 
 class ImgurHelper
-    def initialize(image_file_path = "~/imgur_images")
+    def initialize(image_file_path = "./imgur_images")
         @imgur_regex = /\bhttps?:\/\/(?:i\.)?imgur\.com\/(?:[a-zA-Z0-9]{7}|[a-zA-Z0-9]{5}|[a-zA-Z0-9]{3,})\b/
         @image_file_path = image_file_path
         @logger = Logger.new('log/logfile.log')
@@ -16,7 +16,7 @@ class ImgurHelper
     end
 
     def save_images(body)
-        imgur_urls = body.scan(@imgur_regex).map { |match| match }
+        imgur_urls = body.scan(@imgur_regex)
         imgur_urls.each do |url|
             save_image(url)
         end
