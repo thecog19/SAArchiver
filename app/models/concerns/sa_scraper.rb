@@ -132,7 +132,7 @@ class SAScraper
                           post_id: (post.attributes["id"].to_s)[4..-1],
                           url:  url)
       # @logger.debug('create_post') { "Created post #{new_post.id}" }
-      @imgur_helper.save_images(get_data(post, "td.postbody").to_s)
+      # @imgur_helper.save_images(get_data(post, "td.postbody").to_s)
       new_post.save
     end
     Post.where(post_id: (post.attributes["id"].to_s)[4..-1]).first
