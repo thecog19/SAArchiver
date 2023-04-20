@@ -22,7 +22,20 @@ class ImgurHelper
         imgur_urls.each do |url|
             p url
             sleep(0.1)
-            save_image(url)
+            try = 0
+            begin
+                save_image(url)
+            rescue Exception => e
+                if try < 10
+                    sleep(1)
+                    try += 1
+                    save_image(url)
+                else
+                    p "Failed to save image #{url} to #{path} after 10 tries"
+                    p "Error: #{e}"
+                    try = 0
+                end
+            end
         end
     end
 
@@ -39,7 +52,20 @@ class ImgurHelper
         File.open(path, "wb") do |file|
             # @logger.debug('save_images') { "Saving image #{url} to #{path}" }
             url = url + '.jpg' if File.extname(url) == ''
-            file.write(open(url).read)
+            try = 0
+            begin
+                file.write(open(url).read)
+            rescue Exception => e
+                if try < 10
+                    sleep(1)
+                    try += 1
+                    save_image(url)
+                else
+                    p "Failed to save image #{url} to #{path} after 10 tries"
+                    p "Error: #{e}"
+                    try = 0
+                end
+            end
         end
     end
 end
