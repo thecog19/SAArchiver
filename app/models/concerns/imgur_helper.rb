@@ -3,7 +3,7 @@ require 'open-uri'
 
 class ImgurHelper
     def initialize(image_file_path = "~/imgur_images")
-        @imgur_regex = /https?:\/\/(?:i\.)?imgur\.com\/([a-zA-Z0-9]{5,})(\.[a-zA-Z0-9]{3,4})?/
+        @imgur_regex = /\bhttps?:\/\/(?:i\.)?imgur\.com\/(?:[a-zA-Z0-9]{7}|[a-zA-Z0-9]{5}|[a-zA-Z0-9]{3,})\b/
         @image_file_path = image_file_path
         @logger = Logger.new('log/logfile.log')
     end
