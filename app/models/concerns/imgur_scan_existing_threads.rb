@@ -16,6 +16,7 @@ class ImgurScanExistingThreads
         arr = Dir.entries("/root/imgur_images").to_a
         arr.delete('.')
         arr.delete('..')
+        arr.map! { |x| x.to_i }
         arr 
     end
 
