@@ -20,18 +20,21 @@ class ImgurHelper
     def save_images(body)
         imgur_urls = body.scan(@imgur_regex)
         imgur_urls.each do |url|
+            p url
             save_image(url)
         end
     end
 
     def save_image(url)
-        p url
         regex = %r{\bhttps?://(?:i\.)?imgur\.com/(?:(?:gallery/)?([a-zA-Z0-9]{5,7})|\b([a-zA-Z0-9]{7})(?:\.\w+)?)\b}
         imgur_id_and_extension = url.match(regex)
         imgur_id = imgur_id_and_extension[1] || imgur_id_and_extension[2]
+        p "imgur_id: #{imgur_id}"
         imgur_extension = imgur_id_and_extension[3] || '.jpg'
+        p "imgur_extension: #{imgur_extension}"
         filename = "#{imgur_id}#{imgur_extension}"
         path = File.join(@image_file_path, filename)
+        p "path: #{path}"
         File.open(path, "wb") do |file|
             @logger.debug('save_images') { "Saving image #{url} to #{path}" }
             file.write(open(url).read)
