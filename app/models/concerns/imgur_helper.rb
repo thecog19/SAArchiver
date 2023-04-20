@@ -26,7 +26,7 @@ class ImgurHelper
         regex = %r{\bhttps?://(?:i\.)?imgur\.com/(?:(?:gallery/)?([a-zA-Z0-9]{5,7})|\b([a-zA-Z0-9]{7})(?:\.\w+)?)\b}
         imgur_id_and_extension = url.match(regex)
         imgur_id = imgur_id_and_extension[1] || imgur_id_and_extension[2]
-        imgur_extension = imgur_id_and_extension[3] | '.jpg'
+        imgur_extension = imgur_id_and_extension[3] || '.jpg'
         filename = "#{imgur_id}#{imgur_extension}"
         path = File.join(@image_file_path, filename)
         File.open(path, "wb") do |file|
