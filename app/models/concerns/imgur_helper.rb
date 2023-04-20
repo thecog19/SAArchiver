@@ -21,7 +21,7 @@ class ImgurHelper
         imgur_urls = body.scan(@imgur_regex)
         imgur_urls.each do |url|
             p url
-            sleep(0.3)
+            sleep(0.1)
             save_image(url)
         end
     end
@@ -37,7 +37,7 @@ class ImgurHelper
         path = File.join(@image_file_path, filename)
         p "path: #{path}"
         File.open(path, "wb") do |file|
-            @logger.debug('save_images') { "Saving image #{url} to #{path}" }
+            # @logger.debug('save_images') { "Saving image #{url} to #{path}" }
             url = url + '.jpg' if File.extname(url) == ''
             file.write(open(url).read)
         end
