@@ -40,7 +40,7 @@ class ImgurHelper
     end
 
     def save_image(url)
-        regex = %r{\bhttps?://(?:i\.)?imgur\.com/(?:(?:gallery/)?([a-zA-Z0-9]{5,10})|\b([a-zA-Z0-9]{5,10})(?:\.\w+)?)\b}
+        regex = %r{\bhttps?://(?:i\.)?imgur\.com/(?:(?:gallery/)?([a-zA-Z0-9]{1,})|\b([a-zA-Z0-9]{1,})(?:\.\w+)?)\b}
         imgur_id_and_extension = url.match(regex)
         imgur_id = imgur_id_and_extension[1] || imgur_id_and_extension[2]
         p "imgur_id: #{imgur_id}"
