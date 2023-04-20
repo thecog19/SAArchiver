@@ -11,7 +11,9 @@ class ImgurHelper
 
     def create_directory_if_not_exists(path)
         unless Dir.exist?(path)
-            Dir.mkdir(path)
+          parent = File.dirname(path)
+          create_directory_if_not_exists(parent) unless Dir.exist?(parent)
+          Dir.mkdir(path)
         end
     end
 
