@@ -1,16 +1,14 @@
-This provides a simple REST API for storing and quering SA forums threads, mostly aimed at storing CYOAs. 
+## SAArchiver 
 
-The API allows for users to query the existing data (by user, post and most importantly thread), as well as adding new threads to be archived. 
+At some point, I'll update this to be a proper README, but for now, here's a quick overview of what this is.
 
-As of right now your request to archive a thread will have to be manually approved by an admin. Send the request to the provided request API. 
+### What is it?
+This is a project to host a rails based API to archive something awful threads. Its been in "production" for a while now, but I've never really documented it.
 
-Documentation on API functions here
+### Why?
+Because the only way to make sure content survives on the internet is to host it and back it up 
 
-Search documentation here.
+### How?
+The API is a rails app, in the app/models/concerns folder there is a series of scripts that are used to populate the database. In essence you take the SAScraper and run SAScraper.new.main_logic("thread_url") and it will populate the database with the thread.
 
-How to set this up on your own here (full rails setup. postgress setup. figaro use.)
-
-Route /sathread/ = index
-Route /sathread/:thread_id = thread
-Route /sathread/title/:title = thread
-Route 
+There a bunch of routes that are used to access the data, but I leave discovery to the reader, they're all in the routes file.
