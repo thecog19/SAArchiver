@@ -12,6 +12,14 @@ class ImgurScanExistingThreads
         end
     end
 
+    def generate_skip_list
+        arr = Dir.entries("/root/imgur_images").to_a
+        arr.delete('.')
+        arr.delete('..')
+        arr 
+    end
+
+
     def scan_specific_thread(thread_id)
         logger = Logger.new('log/logfile.log')
         imgur_helper = ImgurHelper.new("/root/imgur_images/#{thread_id}")
