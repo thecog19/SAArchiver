@@ -1,5 +1,6 @@
 require_relative 'imgur_helper'
 require 'logger'
+require 'fileutils'
 
 class ImgurScanExistingThreads
     def scan_all(skip_list = [])
@@ -20,6 +21,15 @@ class ImgurScanExistingThreads
         arr 
     end
 
+    def delete_single_thread_images(thread_id)
+        FileUtils.rm_rf("/root/imgur_images/#{thread_id}")
+    end
+
+    def delete_last_thread_images
+        arr = generate_skip_list
+        last_thread_id = arr.min
+        delete_single_thread_images(last_thread_id)
+    end
 
     def scan_specific_thread(thread_id)
         logger = Logger.new('log/logfile.log')
