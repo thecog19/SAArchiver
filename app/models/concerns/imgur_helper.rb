@@ -20,20 +20,21 @@ class ImgurHelper
     def save_images(body)
         imgur_urls = body.scan(@imgur_regex)
         imgur_urls.each do |url|
+            failed = false
             p url
             sleep(0.1)
             try = 0
-            begin
-                save_image(url)
-            rescue Exception => e
-                if try < 10
-                    sleep(1)
-                    try += 1
+            while !failed
+                begin
                     save_image(url)
-                else
-                    p "Failed to save image #{url} to #{path} after 10 tries"
-                    p "Error: #{e}"
-                    try = 0
+                rescue Exception => e
+                    if try < 10 
+                        try += 1 
+                    else
+                        p "Failed to save image #{url} to #{path} after 10 tries"
+                        p "Error: #{e}"
+                        failed = true
+                    end
                 end
             end
         end
@@ -45,26 +46,16 @@ class ImgurHelper
         imgur_id = imgur_id_and_extension[1] || imgur_id_and_extension[2]
         p "imgur_id: #{imgur_id}"
         imgur_extension = imgur_id_and_extension[3] || '.jpg'
-        p "imgur_extension: #{imgur_extension}"
         filename = "#{imgur_id}#{imgur_extension}"
         path = File.join(@image_file_path, filename)
-        p "path: #{path}"
         File.open(path, "wb") do |file|
             # @logger.debug('save_images') { "Saving image #{url} to #{path}" }
             url = url + '.jpg' if File.extname(url) == ''
-            try = 0
             begin
                 file.write(open(url).read)
             rescue Exception => e
-                if try < 10
-                    sleep(1)
-                    try += 1
-                    save_image(url)
-                else
-                    p "Failed to save image #{url} to #{path} after 10 tries"
-                    p "Error: #{e}"
-                    try = 0
-                end
+                p "failed with error #{e}"
+                raise e 
             end
         end
     end
