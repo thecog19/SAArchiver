@@ -31,7 +31,7 @@ class ImgurHelper
                     if try < 10 
                         try += 1 
                     else
-                        p "Failed to save image #{url} to #{path} after 10 tries"
+                        p "Failed to save image #{url}"
                         p "Error: #{e}"
                         failed = true
                     end
